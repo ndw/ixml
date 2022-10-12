@@ -38,7 +38,6 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           branch: gh-pages
           target-folder: /current
-          dry-run: true
 
       - name: Deploy other branches to branch
         if: ${{ env.HAVE_ACCESS_TOKEN == 'true' && github.ref_name != 'master' }}
@@ -48,4 +47,3 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           branch: gh-pages
           target-folder: /branch/${{ github.ref_name }}
-          dry-run: true
