@@ -57,8 +57,12 @@ def getenv(String name) {
   }
 }
 
-println("Building for CI commit ${getenv('CI_SHA1')}");
-println("Building for CI branch ${getenv('BRANCH_NAME')}");
+if (getenv('CIWORKFLOW') != '') {
+  println("Building for CI commit ${getenv('CI_SHA1')}");
+  println("Building for CI branch ${getenv('CI_BRANCH')}");
+} else {
+  println("Building locally...")
+}
 
 defaultTasks 'publish'
 
