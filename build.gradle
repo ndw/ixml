@@ -1,0 +1,141 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+      url "https://dev.saxonica.com/maven"
+    }
+  }
+
+  dependencies {
+    classpath group: "net.sf.saxon", name: "Saxon-HE", version: "11.4"
+  }
+}
+
+plugins {
+  id "java"
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  maven {
+    url "https://dev.saxonica.com/maven"
+  }
+}
+
+configurations.all {
+  resolutionStrategy {
+    force 'xml-apis:xml-apis:1.4.01'
+  }
+}
+
+configurations {
+  saxon.extendsFrom(implementation)
+}
+
+// Set saxonLicenseDir in gradle.properties, or from the
+// command line if you have a license in some other place.
+if (!hasProperty("saxonLicenseDir")) {
+  ext.saxonLicenseDir=System.getenv('HOME') + "/java"
+}
+
+dependencies {
+  implementation (
+    [group: "net.sf.saxon", name: "Saxon-HE", version: "11.4"]
+  )
+  saxon (
+    files(saxonLicenseDir)
+  )
+}
+
+defaultTasks 'publish'
+
+task publish(
+  group: "publish",
+  dependsOn: ["formatSpec", "copyResources", "ixmlInXml", "ixmlInIxml"],
+  description: "Publish the current specification") {
+}
+
+task formatSpec(
+  type: JavaExec,
+  description: "Copy the specification into the build directory"
+) {
+  inputs.files fileTree(dir: "${projectDir}/src")
+  outputs.file "${buildDir}/current/index.html"
+
+  classpath = configurations.saxon
+  mainClass = "net.sf.saxon.Transform"
+  args "-s:${projectDir}/src/ixml-specification.html",
+    "-xsl:${projectDir}/src/tools/format.xsl",
+    "-o:${buildDir}/current/index.html",
+    "hash=${getEnv('CI_SHA1')}"
+}
+
+task copyResources(
+  description: "Copy the other resources into the build directory"
+) {
+  inputs.files fileTree(dir: "${projectDir}/src/js")
+  inputs.files fileTree(dir: "${projectDir}/src/css")
+  outputs.files fileTree(dir: "${buildDir}/current/js")
+  outputs.files fileTree(dir: "${buildDir}/current/css")
+  outputs.file "${buildDir}/current/ixml.ixml"
+  outputs.file "${buildDir}/current/ixml.xml"
+  outputs.file "${buildDir}/current/errata.html"
+
+  doLast {
+    copy {
+      into "${buildDir}/current"
+      from "${projectDir}/src"
+      include "css/**"
+      include "js/**"
+      include "ixml.ixml"
+      include "ixml.xml"
+      include "errata.html"
+    }
+  }
+}
+
+task ixmlInXml(
+  description: "Format ixml.xml for the web"
+) {
+  inputs.files fileTree(dir: "${projectDir}/src/tools")
+  inputs.file "${projectDir}/src/ixml.xml"
+  outputs.file "${buildDir}/current/ixml.xml.html"
+
+  doLast {
+    javaexec {
+      classpath = configurations.saxon
+      mainClass = "net.sf.saxon.Transform"
+      args "-s:${projectDir}/src/ixml.xml",
+        "-xsl:${projectDir}/src/tools/format-xml.xsl",
+        "-o:${buildDir}/current/ixml.xml.html"
+    }
+  }
+}
+
+task ixmlInIxml(
+  description: "Format ixml.ixml for the web"
+) {
+  inputs.files fileTree(dir: "${projectDir}/src/tools")
+  inputs.file "${projectDir}/src/ixml.ixml"
+  outputs.file "${buildDir}/current/ixml.ixml.html"
+
+  doLast {
+    exec {
+      commandLine 'python', "${projectDir}/src/tools/highlight.py",
+        "${projectDir}/src/ixml.ixml", "${buildDir}/ixml.ixml.xml"
+    }
+  }
+
+  doLast {
+    javaexec {
+      classpath = configurations.saxon
+      mainClass = "net.sf.saxon.Transform"
+      args "-s:${buildDir}/ixml.ixml.xml",
+        "-xsl:${projectDir}/src/tools/format-ixml.xsl",
+        "-o:${buildDir}/current/ixml.ixml.html"
+    }
+  }
+}
+    

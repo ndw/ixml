@@ -17,6 +17,7 @@
                                pre.frag {display: block}
                           </style>
                           -->
+  <link rel="stylesheet" href="css/style.css"/>
   <style type="text/css">
       body {margin-left: auto; margin-right:auto; max-width: 50em;}
       h1, h2 {font-family: sans-serif; clear: both}
@@ -34,11 +35,16 @@
 
 <p>Editor: Steven Pemberton, CWI, Amsterdam</p>
 
-<p>Version: <!--$date=-->2022-06-20<!--$--></p>
+<p>Version: <?pubdate?></p>
+
+<p>Please consult the <a href="errata.html">errata page</a> for additional changes to
+this specification after publication.</p>
 
 <h2 id="status">Status</h2>
 
-<p>This document describes the final version of ixml version 1.0.</p>
+<p>This document describes the ixml version 1.0++, a work in progress.
+The current official version is
+<a href="https://invisiblexml.org/1.0/">Invisible XML 1.0</a>.</p>
 
 <div class="toc">
 <ul>
@@ -784,6 +790,9 @@ generated nonterminals.</p>
 -f-star-sep: (f++sep)?.</pre>
 
 <h2 id="complete">Complete Grammar</h2>
+
+<p>The <a href="ixml.ixml.html">complete grammar</a> for ixml:</p>
+
 <pre>         ixml: s, prolog?, rule++RS, s.
 
            -s: (whitespace; comment)*. {Optional spacing}
@@ -863,7 +872,7 @@ generated nonterminals.</p>
 can be processed into an XML document by parsing it using itself, and then
 serializing. Note that all semantically significant terminals are recorded in
 attributes, and non-significant characters are not serialized. The
-serialization begins as below, but the <a href="ixml.xml">entire
+serialization begins as below, but the <a href="ixml.xml.html">entire
 serialization</a> is available:</p>
 <pre>&lt;ixml&gt;
    &lt;rule name='ixml'&gt;
