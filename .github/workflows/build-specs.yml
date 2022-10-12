@@ -1,0 +1,51 @@
+name: build-specs
+on: push
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      HAVE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN != '' }}
+      AUTODIFF: ${{ secrets.DIFFURI != '' && secrets.DIFFPW != '' }}
+      BRANCH_NAME: ${{ github.ref_name }}
+    steps:
+      - name: Checkout the ixml repository
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          ./gradlew
+
+      - name: Setup DeltaXML
+        if: ${{ env.AUTODIFF == 'true' }}
+        run: |
+            curl -s ${{ secrets.DIFFURI }} | openssl enc -aes-256-cbc -salt -pbkdf2 -d -k ${{ secrets.DIFFPW }} | tar zxf -
+
+      - name: Make DeltaXML diffs
+        if: ${{ env.AUTODIFF == 'true' }}
+        run: |
+            sh tools/autodiff.sh 1.0
+
+      - name: Cleanup DeltaXML
+        if: ${{ env.AUTODIFF == 'true' }}
+        run: |
+            rm -rf tools/deltaxml
+
+      - name: Deploy master to specifications
+        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' && github.ref_name == 'master' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/www
+          token: ${{ secrets.ACCESS_TOKEN }}
+          branch: gh-pages
+          target-folder: /current
+          dry-run: true
+
+      - name: Deploy other branches to branch
+        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' && github.ref_name != 'master' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/www
+          token: ${{ secrets.ACCESS_TOKEN }}
+          branch: gh-pages
+          target-folder: /branch/${{ github.ref_name }}
+          dry-run: true
