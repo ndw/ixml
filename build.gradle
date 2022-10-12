@@ -57,6 +57,9 @@ def getenv(String name) {
   }
 }
 
+println("Building for CI commit ${getenv('CI_SHA1')}");
+println("Building for CI branch ${getenv('BRANCH_NAME')}");
+
 defaultTasks 'publish'
 
 task publish(
