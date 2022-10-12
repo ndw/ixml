@@ -49,6 +49,14 @@ dependencies {
   )
 }
 
+def getenv(String name) {
+  if (System.getenv(name) == null) {
+    return ""
+  } else {
+    return System.getenv(name)
+  }
+}
+
 defaultTasks 'publish'
 
 task publish(
@@ -69,7 +77,7 @@ task formatSpec(
   args "-s:${projectDir}/src/ixml-specification.html",
     "-xsl:${projectDir}/src/tools/format.xsl",
     "-o:${buildDir}/current/index.html",
-    "hash=${getEnv('CI_SHA1')}"
+    "hash=${getenv('CI_SHA1')}"
 }
 
 task copyResources(
