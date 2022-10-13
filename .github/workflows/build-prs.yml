@@ -1,0 +1,57 @@
+name: build-pr
+on:
+  pull_request_target:
+    types: [assigned, opened, edited, synchronize, reopened]
+    branches:
+      - build-system
+jobs:
+  build-and-deploy-pr:
+    runs-on: ubuntu-latest
+    env:
+      HAVE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN != '' }}
+      AUTODIFF: ${{ secrets.DIFFURI != '' && secrets.DIFFPW != '' }}
+      PR_NUMBER: ${{ github.event.number }}
+    steps:
+      - name: Get the pull request
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Save sources
+        run: |
+          mkdir /tmp/pr-sources
+          rsync -ar --exclude tools/ ./src/ /tmp/pr-sources/
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update sources
+        run: rsync -var /tmp/pr-sources/ ./src/
+
+      - name: Build specifications
+        run: |
+          ./gradlew
+
+      - name: Setup DeltaXML
+        if: ${{ env.AUTODIFF == 'true' }}
+        run: |
+            curl -s ${{ secrets.DIFFURI }} | openssl enc -aes-256-cbc -salt -pbkdf2 -d -k ${{ secrets.DIFFPW }} | tar zxf -
+
+      - name: Make DeltaXML diffs
+        if: ${{ env.AUTODIFF == 'true' }}
+        run: |
+            sh src/tools/autodiff.sh current
+
+      - name: Cleanup DeltaXML
+        if: ${{ env.AUTODIFF == 'true' }}
+        run: |
+            rm -rf tools/deltaxml
+
+      - name: Deploy
+        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/current
+          token: ${{ secrets.ACCESS_TOKEN }}
+          branch: gh-pages
+          target-folder: /pr/${{ github.event.number }}
