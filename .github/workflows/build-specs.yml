@@ -61,7 +61,7 @@ jobs:
       - name: Make DeltaXML diffs
         if: ${{ env.AUTODIFF == 'true' }}
         run: |
-            sh src/tools/autodiff.sh 1.0
+            sh src/tools/autodiff.sh current
 
       - name: Cleanup DeltaXML
         if: ${{ env.AUTODIFF == 'true' }}
