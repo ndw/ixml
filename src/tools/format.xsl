@@ -47,7 +47,7 @@
         <xsl:choose>
           <xsl:when test="$ci-pull = ''">
             <span class="dt">
-              <xsl:text>Document build #{$ci-build-num} for PR #{$ci-pull} </xsl:text>
+              <xsl:text>Document build #{$ci-build-num} with PR #{$ci-pull} </xsl:text>
               <xsl:text>for {$ci-project-username}/{$ci-project-reponame} at </xsl:text>
               <time datetime="{format-dateTime(current-dateTime(),
                                '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][z,6-6]')}"
