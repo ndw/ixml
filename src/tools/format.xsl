@@ -19,6 +19,7 @@
 <xsl:param name="ci-project-reponame" select="''" as="xs:string"/>
 <xsl:param name="ci-branch" select="''" as="xs:string"/>
 <xsl:param name="ci-tag" select="''" as="xs:string"/>
+<xsl:param name="ci-pull" select="''" as="xs:string"/>
 
 <xsl:mode on-no-match="shallow-copy"/>
 
@@ -44,6 +45,26 @@
     <footer class="docid">
       <p>
         <xsl:choose>
+          <xsl:when test="$ci-pull = ''">
+            <span class="dt">
+              <xsl:text>Document build #{$ci-build-num} for PR #{$ci-pull} </xsl:text>
+              <xsl:text>for {$ci-project-username}/{$ci-project-reponame} at </xsl:text>
+              <time datetime="{format-dateTime(current-dateTime(),
+                               '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][z,6-6]')}"
+                    title="{format-dateTime(current-dateTime(),
+                            '[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][z,6-6]')}">
+                <xsl:text>{format-dateTime(current-dateTime(),
+                           '[H01]:[m01] on [D01] [MNn] [Y0001]')}</xsl:text>
+              </time>
+            </span>
+            <xsl:text> </xsl:text>
+            <span class="bh">
+              <xsl:if test="$ci-tag != '' or $ci-branch ne 'master'">
+                <xsl:sequence select="$ci-tag||$ci-branch||'/'"/>
+              </xsl:if>
+              <span title="{$ci-sha1}">{substring($ci-sha1, 1, 8)}</span>
+            </span>
+          </xsl:when>
           <xsl:when test="$ci-sha1 = ''">
             <span class="dt">
               <xsl:text>Published at </xsl:text>
