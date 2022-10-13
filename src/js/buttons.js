@@ -9,9 +9,9 @@
   let toggles = document.querySelector("#toggle-buttons");
   let html = toggles.innerHTML;
   if (xml) {
-    toggles.innerHTML = "<div><a class='button' id='allopen' href='#'>All ⯆</a>"
-      + "<a class='button' id='allclose' href='#'>All ⯈</a>"
-      + "<a class='button' id='allremove' href='#'>Remove ⯆/⯈</a></div>";
+    toggles.innerHTML = "<div><a class='button' id='allopen' href='#'>All ▾</a>"
+      + "<a class='button' id='allclose' href='#'>All ▸</a>"
+      + "<a class='button' id='allremove' href='#'>Remove ▾/▸</a></div>";
   } else {
     toggles.innerHTML = "";
   }
