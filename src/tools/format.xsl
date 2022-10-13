@@ -45,7 +45,7 @@
     <footer class="docid">
       <p>
         <xsl:choose>
-          <xsl:when test="$ci-pull = ''">
+          <xsl:when test="$ci-pull != ''">
             <span class="dt">
               <xsl:text>Document build #{$ci-build-num} with PR #{$ci-pull} </xsl:text>
               <xsl:text>for {$ci-project-username}/{$ci-project-reponame} at </xsl:text>
