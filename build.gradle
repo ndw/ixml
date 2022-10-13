@@ -89,7 +89,8 @@ task formatSpec(
     "ci-project-username=${getenv('CI_PROJECT_USERNAME')}",
     "ci-project-reponame=${getenv('CI_PROJECT_REPONAME')}",
     "ci-branch=${getenv('CI_BRANCH')}",
-    "ci-tag=${getenv('CI_TAG')}"
+    "ci-tag=${getenv('CI_TAG')}",
+    "ci-pull=${getenv('CI_PULL')}"
 }
 
 task copyResources(
