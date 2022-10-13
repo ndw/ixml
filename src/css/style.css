@@ -61,6 +61,10 @@ a, a:visited, a:link {
     color: blue;
 }
 
+a.button {
+    color: black;
+}
+
 img {
     float: right;
     width: 25%; margin-left: 1em;
