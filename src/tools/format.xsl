@@ -29,9 +29,9 @@
   <xsl:if test="$hash != ''">
     <p>A version with automatically generated change
     markup <a href="autodiff.html">is available</a>. Change markup shows
-    the differences between <a href="index.html">this</a> version of the
+    the differences between <a href="index.html">this version</a> of the
     specification and the
-    “<a href="https://invisible.xml.com/current/">current</a>” version (at the
+    <a href="https://invisiblexml.org/current/">current version</a> (at the
     time of publication).</p>
   </xsl:if>
   <xsl:next-match/>
