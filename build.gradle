@@ -84,7 +84,20 @@ task formatSpec(
   args "-s:${projectDir}/src/ixml-specification.html",
     "-xsl:${projectDir}/src/tools/format.xsl",
     "-o:${buildDir}/current/index.html",
-    "hash=${getenv('CI_SHA1')}"
+    "ci-sha1=88b7af097dd159a30997eaa1ee504eed0e4f7127",
+    "ci-build-num=12",
+    "ci-project-username=ndw",
+    "ci-project-reponame=ixml",
+    "ci-branch=build-system",
+    "ci-tag="
+/*
+    "ci-sha1=${getenv('CI_SHA1')}",
+    "ci-build-num=${getenv('CI_BUILD_NUM')}",
+    "ci-project-username=${getenv('CI_PROJECT_USERNAME')}",
+    "ci-project-reponame=${getenv('CI_PROJECT_REPONAME')}",
+    "ci-branch=${getenv('CI_BRANCH')}",
+    "ci-tag=${getenv('CI_TAG')}"
+*/
 }
 
 task copyResources(
