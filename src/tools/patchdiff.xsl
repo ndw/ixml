@@ -21,7 +21,7 @@
   <div class="diffinfo">
     <p>The presentation of this document has been augmented by
     <a href="https://www.deltaxml.com/">DeltaXML</a> to identify changes
-    from a {$spec} version. You can view the old version, the new version,
+    from the {$spec} version. You can view the old version, the new version,
     or both versions with styled <span class="show-old">old text</span>
     and <span class="show-new">new text</span>.</p>
   </div>

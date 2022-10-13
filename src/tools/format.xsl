@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:html="http://www.w3.org/1999/xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="xs"
                 version="3.0">
@@ -22,6 +23,18 @@
     </xsl:if>
     <xsl:sequence select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
   </time>
+</xsl:template>
+
+<xsl:template match="html:h2[@id='status']">
+  <xsl:if test="$hash != ''">
+    <p>A version with automatically generated change
+    markup <a href="autodiff.html">is available</a>. Change markup shows
+    the differences between <a href="index.html">this</a> version of the
+    specification and the
+    “<a href="https://invisible.xml.com/current/">current</a>” version (at the
+    time of publication).</p>
+  </xsl:if>
+  <xsl:next-match/>
 </xsl:template>
 
 <xsl:template match="@xml:space"/>

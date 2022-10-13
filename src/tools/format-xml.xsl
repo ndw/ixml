@@ -31,6 +31,7 @@
           <xsl:apply-templates/>
         </pre>
       </div>
+      <script src="js/buttons.js"></script>
       <script src="js/treeview.js"></script>
     </body>
   </html>

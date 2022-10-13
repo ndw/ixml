@@ -31,7 +31,7 @@
           <xsl:sequence select="."/>
         </pre>
       </div>
-      <script src="js/treeview.js"></script>
+      <script src="js/buttons.js"></script>
     </body>
   </html>
 </xsl:template>
