@@ -70,6 +70,7 @@ task formatSpec(
   description: "Copy the specification into the build directory"
 ) {
   inputs.files fileTree(dir: "${projectDir}/src")
+  inputs.files fileTree(dir: "${projectDir}/build-tools")
   outputs.file "${buildDir}/current/index.html"
 
   classpath = configurations.saxon
