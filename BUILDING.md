@@ -10,7 +10,7 @@ The Invisible XML specification is built automatically for publication by a
    of the Invisible XML
    [repository](https://github.com/invisibleXML/ixml), make
    [a branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches).
-2. Edit `ixml-specification.xml` (in the `src` folder) to your
+2. Edit `ixml-specification.html` (in the `src` folder) to your
       heart’s content. (If necessary, edit the grammars, CSS, etc. as well.)
 3. Create a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) with your changes.
    
