@@ -27,7 +27,8 @@
 
 <xsl:mode on-no-match="shallow-copy"/>
 
-<xsl:template match="processing-instruction('pubdate')">
+<xsl:template match="text()[preceding-sibling::node()[1]/self::comment()
+                            and preceding-sibling::node()[1]/string() = '$date=']">
   <xsl:sequence select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
 </xsl:template>
 
