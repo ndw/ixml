@@ -18,10 +18,10 @@ jobs:
         run: |
           raw=${{ github.repository }}
           reponame=${raw##*/}
-          echo "::set-output name=reponame::$reponame"
+          echo "reponame=${reponame}" >> $GITHUB_OUTPUT
           raw=$(git branch -r --contains ${{ github.ref }})
           branch=${raw##*/}
-          echo "::set-output name=branch::$branch"
+          echo "branch=${branch}" >> $GITHUB_OUTPUT
           tag=""
           if [ ${{ github.ref_type }} = "tag" ]; then
             tag=${{ github.ref_name }}
@@ -29,7 +29,7 @@ jobs:
           else
             echo "Running in $reponame on $branch"
           fi
-          echo "::set-output name=tag::$tag"
+          echo "tag=${tag}" >> $GITHUB_OUTPUT
 
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -48,6 +48,20 @@ jobs:
     steps:
       - name: Checkout the ixml repository
         uses: actions/checkout@v3
+
+      - name: Check environment
+        run: |
+          echo 
+          echo "HAVE_ACCESS_TOKEN=${{ env.HAVE_ACCESS_TOKEN }}"
+          echo "AUTODIFF=${{ env.AUTODIFF }}"
+          echo "BRANCH_NAME=${{ env.BRANCH_NAME }}"
+          echo "CIWORKFLOW=${{ env.CIWORKFLOW }}"
+          echo "CI_SHA1=${{ env.CI_SHA1 }}"
+          echo "CI_BUILD_NUM=${{ env.CI_BUILD_NUM }}"
+          echo "CI_PROJECT_USERNAME=${{ env.CI_PROJECT_USERNAME }}"
+          echo "CI_PROJECT_REPONAME=${{ env.CI_PROJECT_REPONAME }}"
+          echo "CI_BRANCH=${{ env.CI_BRANCH }}"
+          echo "CI_TAG=${{ env.CI_TAG }}"
 
       - name: Build
         run: |
