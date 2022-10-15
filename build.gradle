@@ -75,7 +75,7 @@ task formatSpec(
   classpath = configurations.saxon
   mainClass = "net.sf.saxon.Transform"
   args "-s:${projectDir}/src/ixml-specification.html",
-    "-xsl:${projectDir}/src/tools/format.xsl",
+    "-xsl:${projectDir}/build-tools/format.xsl",
     "-o:${buildDir}/current/index.html",
     "ci-sha1=${getenv('CI_SHA1')}",
     "ci-build-num=${getenv('CI_BUILD_NUM')}",
@@ -114,14 +114,14 @@ task ixmlInXml(
   type: JavaExec,
   description: "Format ixml.xml for the web"
 ) {
-  inputs.files fileTree(dir: "${projectDir}/src/tools")
+  inputs.files fileTree(dir: "${projectDir}/build-tools")
   inputs.file "${projectDir}/src/ixml.xml"
   outputs.file "${buildDir}/current/ixml.xml.html"
 
   classpath = configurations.saxon
   mainClass = "net.sf.saxon.Transform"
   args "-s:${projectDir}/src/ixml.xml",
-    "-xsl:${projectDir}/src/tools/format-xml.xsl",
+    "-xsl:${projectDir}/build-tools/format-xml.xsl",
     "-o:${buildDir}/current/ixml.xml.html"
 }
 
@@ -129,14 +129,14 @@ task ixmlInIxml(
   type: JavaExec,
   description: "Format ixml.ixml for the web"
 ) {
-  inputs.files fileTree(dir: "${projectDir}/src/tools")
+  inputs.files fileTree(dir: "${projectDir}/build-tools")
   inputs.file "${projectDir}/src/ixml.ixml"
   outputs.file "${buildDir}/current/ixml.ixml.html"
 
   classpath = configurations.saxon
   mainClass = "net.sf.saxon.Transform"
   args "-it",
-    "-xsl:${projectDir}/src/tools/format-ixml.xsl",
+    "-xsl:${projectDir}/build-tools/format-ixml.xsl",
     "-o:${buildDir}/current/ixml.ixml.html",
     "ixml.ixml=${projectDir}/src/ixml.ixml"
 }

@@ -17,7 +17,7 @@ java -jar tools/deltaxml/command-12.0.1.jar compare xhtml-patch \
 
 # Patch the diff version and make it HTML5
 java -jar tools/deltaxml/saxon9pe.jar \
-     -s:/tmp/autodiff.$PID.html -xsl:src/tools/patchdiff.xsl -o:build/current/autodiff.html \
+     -s:/tmp/autodiff.$PID.html -xsl:build-tools/patchdiff.xsl -o:build/current/autodiff.html \
      spec=$SPEC
 
 rm -f /tmp/A.$PID.html /tmp/B.$PID.html /tmp/autodiff.$PID.html
