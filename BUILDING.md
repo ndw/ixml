@@ -43,5 +43,5 @@ The output will be in `build/current`. You can open
 browsers won’t load JavaScript off the filesystem. You might want to do it
 in a [a webserver](https://github.com/ndw/webserver). (There’s no
 JavaScript in the specification itself, but there’s a small amount of
-progressive enhancment in some of the ancillary pages.)
+progressive enhancement in some of the ancillary pages.)
 
