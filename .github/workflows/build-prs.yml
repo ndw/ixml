@@ -58,7 +58,7 @@ jobs:
       - name: Save sources
         run: |
           mkdir /tmp/pr-sources
-          rsync -ar --exclude tools/ ./src/ /tmp/pr-sources/
+          rsync -ar ./src/ /tmp/pr-sources/
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -78,7 +78,7 @@ jobs:
       - name: Make DeltaXML diffs
         if: ${{ env.AUTODIFF == 'true' }}
         run: |
-            sh src/tools/autodiff.sh current
+            sh build-tools/autodiff.sh current
 
       - name: Cleanup DeltaXML
         if: ${{ env.AUTODIFF == 'true' }}
