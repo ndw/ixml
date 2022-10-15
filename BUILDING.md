@@ -41,5 +41,7 @@ and build the specification.
 The output will be in `build/current`. You can open
 `build/current/index.html` directly in your browser, but most modern
 browsers won’t load JavaScript off the filesystem. You might want to do it
-in a [a webserver](https://github.com/ndw/webserver).
+in a [a webserver](https://github.com/ndw/webserver). (There’s no
+JavaScript in the specification itself, but there’s a small amount of
+progressive enhancment in some of the ancillary pages.)
 
