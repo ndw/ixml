@@ -52,7 +52,7 @@
       </xsl:try>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:sequence select="error((), 'Invalid argument to f:highlight-xml')"/>
+      <xsl:sequence select="error((), 'Invalid argument to f:highlight-xml: ' || string($frag))"/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:function>
@@ -61,7 +61,6 @@
 
 <xsl:template match="*">
   <xsl:param name="controls" as="xs:boolean" tunnel="yes"/>
-
   <xsl:if test="$controls">
     <xsl:sequence select="substring($spaces, 1, count(ancestor::*)*3)"/>
   </xsl:if>
@@ -151,9 +150,9 @@
   <span class="attr">
     <span class="aname">{local-name(.)}</span>
     <span class="eq">=</span>
-    <span class="q">'</span>
-    <span class="avalue">{replace(., "'", "&amp;apos;")}</span>
-    <span class="q">'</span>
+    <span class="q">"</span>
+    <span class="avalue">{replace(., """", "&amp;quot;")}</span>
+    <span class="q">"</span>
   </span>
 </xsl:template>
 

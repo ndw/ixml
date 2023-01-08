@@ -7,14 +7,31 @@ buildscript {
     }
   }
 
+  configurations.all {
+    resolutionStrategy {
+      force 'xml-apis:xml-apis:1.4.01',
+        "${saxonGroup}:${saxonEdition}:${saxonVersion}",
+        "org.xmlresolver:xmlresolver:${xmlresolverVersion}"
+    }
+  }
+
   dependencies {
-    classpath group: "net.sf.saxon", name: "Saxon-HE", version: "11.4"
+    classpath group: saxonGroup, name: saxonEdition, version: saxonVersion
+    classpath group: 'com.nwalsh', name: 'sinclude', version: sincludeVersion
+    classpath group: 'org.xmlresolver', name: 'xmlresolver', version: xmlresolverVersion
   }
 }
 
 plugins {
-  id "java"
+  id 'java'
+  id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.6'
+  id 'com.nwalsh.gradle.relaxng.validate' version '0.0.6'
+  id 'com.nwalsh.gradle.relaxng.translate' version '0.0.6'
 }
+
+import com.nwalsh.gradle.saxon.SaxonXsltTask
+import com.nwalsh.gradle.relaxng.validate.RelaxNGValidateTask
+import com.nwalsh.gradle.relaxng.translate.RelaxNGTranslateTask
 
 repositories {
   mavenLocal()
@@ -26,18 +43,24 @@ repositories {
 
 configurations.all {
   resolutionStrategy {
-    force 'xml-apis:xml-apis:1.4.01'
+    force 'xml-apis:xml-apis:1.4.01',
+      "${saxonGroup}:${saxonEdition}:${saxonVersion}",
+      "org.xmlresolver:xmlresolver:${xmlresolverVersion}"
   }
 }
 
 configurations {
-  saxon.extendsFrom(implementation)
+  xform.extendsFrom(implementation)
 }
 
 dependencies {
   implementation (
-    [group: "net.sf.saxon", name: "Saxon-HE", version: "11.4"],
-    [group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30']
+    [group: saxonGroup, name: saxonEdition, version: saxonVersion],
+    [group: 'org.relaxng', name: 'jing', version: jingVersion ],
+    [group: 'org.relaxng', name: 'trang', version: jingVersion ],
+    [group: 'org.xmlresolver', name: 'xmlresolver', version: xmlresolverVersion],
+    [group: 'com.nwalsh', name: 'sinclude', version: sincludeVersion ],
+    [group: 'org.slf4j', name: 'slf4j-simple', version: slf4jVersion ],
   )
 }
 
@@ -59,9 +82,13 @@ if (getenv('CIWORKFLOW') != '') {
 
 defaultTasks 'publish'
 
+saxon.configure {
+  initializer 'com.nwalsh.xslt.Register'
+}
+
 task publish(
   group: "publish",
-  dependsOn: ["formatSpec", "copyResources", "ixmlInXml", "ixmlInIxml"],
+  dependsOn: ["formatSpec", "copyResources", "ixmlInXml", "ixmlInIxml", 'xformGuide'],
   description: "Publish the current specification") {
 }
 
@@ -72,7 +99,7 @@ task formatSpec(
   inputs.files fileTree(dir: "${projectDir}/src")
   outputs.file "${buildDir}/current/index.html"
 
-  classpath = configurations.saxon
+  classpath = configurations.xform
   mainClass = "net.sf.saxon.Transform"
   args "-s:${projectDir}/src/ixml-specification.html",
     "-xsl:${projectDir}/build-tools/format.xsl",
@@ -118,7 +145,7 @@ task ixmlInXml(
   inputs.file "${projectDir}/src/ixml.xml"
   outputs.file "${buildDir}/current/ixml.xml.html"
 
-  classpath = configurations.saxon
+  classpath = configurations.xform
   mainClass = "net.sf.saxon.Transform"
   args "-s:${projectDir}/src/ixml.xml",
     "-xsl:${projectDir}/build-tools/format-xml.xsl",
@@ -133,7 +160,7 @@ task ixmlInIxml(
   inputs.file "${projectDir}/src/ixml.ixml"
   outputs.file "${buildDir}/current/ixml.ixml.html"
 
-  classpath = configurations.saxon
+  classpath = configurations.xform
   mainClass = "net.sf.saxon.Transform"
   args "-it",
     "-xsl:${projectDir}/build-tools/format-ixml.xsl",
@@ -141,3 +168,34 @@ task ixmlInIxml(
     "ixml.ixml=${projectDir}/src/ixml.ixml"
 }
     
+// ============================================================
+
+task ixmlRng(
+  type: SaxonXsltTask,
+  dependsOn: ["ixmlInXml", 'copyResources']
+) {
+  input "${buildDir}/current/ixml.xml"
+  stylesheet "${projectDir}/tools/ixml-to-rng.xsl"
+  output "${buildDir}/ixml.rng"
+}
+
+task guideResources(
+  type: Copy
+) {
+  into "${buildDir}/xmlguide/css"
+  from "${projectDir}/xmlguide/css"
+}
+
+task xformGuide(
+  type: SaxonXsltTask,
+  dependsOn: ["ixmlRng", "guideResources"]
+) {
+  inputs.dir "${projectDir}/xmlguide"
+
+  input "${projectDir}/xmlguide/xml/guide.xml"
+  stylesheet "${projectDir}/xmlguide/xsl/compose.xsl"
+  output "${buildDir}/xmlguide/index.html"
+  parameters(
+    "ixml.rng": "${buildDir}/ixml.rng"
+  )
+}
