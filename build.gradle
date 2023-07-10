@@ -14,7 +14,10 @@ buildscript {
 
 plugins {
   id "java"
+  id "de.undercouch.download" version "4.0.4"
 }
+
+import de.undercouch.gradle.tasks.download.Download
 
 repositories {
   mavenLocal()
@@ -174,4 +177,31 @@ task ixmlInIxml(
     "-o:${buildDir}/current/ixml.ixml.html",
     "ixml.ixml=${extractIxmlInIxml.outputs.getFiles().getSingleFile()}"
 }
+
+task copy10Spec(type: Download) {
+  src "https://invisiblexml.org/1.0/"
+  dest file("${buildDir}/ixml-1.0.html")
+  doFirst {
+    mkdir(buildDir)
+  }
+  onlyIf { !file("${buildDir}/ixml-1.0.html").exists() }
+}
     
+task communityReport(
+  dependsOn: ["publish", "copy10Spec"],
+  description: "Reformats the specification to satisfy W3C requirements"
+) {
+  inputs.files copy10Spec.outputs.files.getSingleFile()
+  inputs.file "${projectDir}/build-tools/report.xsl"
+  outputs.file "${buildDir}/${cg}/CG-FINAL-${cgreport}-${cgdate}/index.html"
+
+  doLast {
+    javaexec {
+      classpath = configurations.saxon
+      mainClass = "net.sf.saxon.Transform"
+      args "-s:${copy10Spec.outputs.files.getSingleFile()}",
+        "-xsl:${projectDir}/build-tools/report.xsl",
+        "-o:${buildDir}/${cg}/CG-FINAL-${cgreport}-${cgdate}/index.html"
+    }
+  }
+}
