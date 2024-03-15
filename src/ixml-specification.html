@@ -302,7 +302,8 @@ ignored.</p>
 </pre>
 
 <p>An <code>s</code> stands for an optional sequence of spacing and comments;
-<code>RS</code> for at least one space or comment. A comment is enclosed in
+<code>RS</code> for at least one space or comment; <code>RWS</code> for at least one
+whitespace, excluding comments. A comment is enclosed in
 braces, and can included nested comments, to enable commenting out parts of a
 grammar:</p>
 <pre class="frag ixml">         -s: (whitespace; comment)*. {Optional spacing}
@@ -358,21 +359,22 @@ value. The ixml namespace URI is "<code>http://invisiblexml.org/NS</code>".</p>
       -msep: whitespace*, -"," .
 </pre>
 
-<p>The metadata is a set of name/value pairs where each value may be either a string, or
-a sequence of fields that are name/value pairs.</p>
+<p>Each <code>metadata</code> declaration consists of a name followed by either a string
+or a set of <code>field</code>s. Each field value is a string.</p>
 
 <p>For example:</p>
 
 <pre class="ixml">ixml version "1.1" .
 author  givenname: "Norman", surname: "Tovey-Walsh" .
 license id: "MIT", name: "The MIT License",
-       uri: "https://opensource.org/license/mit" .
+        uri: "https://opensource.org/license/mit" .
 date    "2024-03-12" .
-grammar-version "1.0" .
+release "1.0" .
 …
 </pre>
 
-<p>Which corresponds to the following XML:</p>
+<p>In the XML serialization of the grammar, machine-readable metadata appears in metadata
+and field elements:</p>
 
 <pre class="xml"><![CDATA[<ixml>
    <prolog>
@@ -387,9 +389,10 @@ grammar-version "1.0" .
          <field name='uri'>https://opensource.org/license/mit</field>
       </metadata>
       <metadata name='date'>2024-03-12</metadata>
-      <metadata name='grammar-version'>1.0</metadata>
+      <metadata name='release'>1.0</metadata>
    </prolog>
-…]]></pre>
+…
+</ixml>]]></pre>
 
 <p>This specification does not assign specific semantics to any metadata names or values.</p>
 
