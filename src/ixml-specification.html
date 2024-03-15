@@ -307,6 +307,7 @@ braces, and can included nested comments, to enable commenting out parts of a
 grammar:</p>
 <pre class="frag ixml">         -s: (whitespace; comment)*. {Optional spacing}
         -RS: (whitespace; comment)+. {Required spacing}
+       -RWS: whitespace+ .
 -whitespace: -[Zs]; tab; lf; cr.
        -tab: -#9.
         -lf: -#a.
@@ -317,10 +318,11 @@ grammar:</p>
 
 <h3 id="prolog">Prolog</h3>
 
-<p>The optional prolog declares the version of ixml being used.</p>
+<p>The optional prolog declares the version of ixml being used and may declare
+additional metadata about the grammar.</p>
 
-<pre class="frag ixml">       prolog: version.
-      version: -"ixml", RS, -"version", RS, string, s, -'.' .
+<pre class="frag ixml">       prolog: version, RWS, (metadata+ | RS).
+      version: -"ixml", RWS, -"version", RWS, string, s, -'.' .
 </pre>
 
 <p>If a version string is provided and the implementation recognizes the version
@@ -344,6 +346,51 @@ href="#err-s12">error S12</a>).</p>
 serialization <span class="conform">must</span> include an attribute named
 <code>ixml:state</code>, with the word '<code>version-mismatch</code>' in its
 value. The ixml namespace URI is "<code>http://invisiblexml.org/NS</code>".</p>
+
+<h4 id="metadata">Grammar metadata</h4>
+
+<p>The prolog may also contain additional metadata about the grammar.</p>
+
+<pre class="frag ixml">   metadata: name, (field++msep | RWS, chardata), whitespace*, -".", RS .
+      field: RWS, name, whitespace*, -":", whitespace*, chardata .
+  -chardata: -'"', -dchar+, -'"';
+             -"'", -schar+, -"'".
+      -msep: whitespace*, -"," .
+</pre>
+
+<p>The metadata is a set of name/value pairs where each value may be either a string, or
+a sequence of fields that are name/value pairs.</p>
+
+<p>For example:</p>
+
+<pre class="ixml">ixml version "1.1" .
+author  givenname: "Norman", surname: "Tovey-Walsh" .
+license id: "MIT", name: "The MIT License",
+       uri: "https://opensource.org/license/mit" .
+date    "2024-03-12" .
+grammar-version "1.0" .
+</pre>
+
+<p>Which corresponds to the following XML:</p>
+
+<pre><![CDATA[<ixml>
+   <prolog>
+      <version string='1.1'/>
+      <metadata name='author'>
+         <field name='givenname'>Norman</field>
+         <field name='surname'>Tovey-Walsh</field>
+      </metadata>
+      <metadata name='license'>
+         <field name='id'>MIT</field>
+         <field name='name'>The MIT License</field>
+         <field name='uri'>https://opensource.org/license/mit</field>
+      </metadata>
+      <metadata name='date'>2024-03-12</metadata>
+      <metadata name='grammar-version'>1.0</metadata>
+   </prolog>
+…]]></pre>
+
+<p>This specification does not assign specific semantics to any metadata names or values.</p>
 
 <h3 id="rules">Rules</h3>
 
