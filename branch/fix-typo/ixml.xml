@@ -1,7 +1,7 @@
 <ixml>
-   <comment> Invisible XML specification grammar, 2025-02-12 </comment>
+   <comment> Invisible XML specification grammar, 2025-02-26 </comment>
    <comment> Published in https://ndw.github.io/ixml/branch/fix-typo/ </comment>
-   <comment> Commit hash 6e80b2ef7859 </comment>
+   <comment> Commit hash 32672160acf2 </comment>
    <rule name="ixml">
       <alt>
          <nonterminal name="s"/>
