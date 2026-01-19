@@ -28,18 +28,15 @@
         -term: factor;
                option;
                repeat0;
-               repeat1;
-               repeatn.
+               repeat1.
       -factor: terminal;
                nonterminal;
                insertion;
                -"(", s, alts, -")", s.
       repeat0: factor, (-"*", s; -"**", s, sep).
       repeat1: factor, (-"+", s; -"++", s, sep).
-      repeatn: factor, (-"<", s, min, s, (-",", s, max, s)?, -">", s;
-                        -"<<", s, min, s, (-",", s, max, s)?, -">>", s, sep).
-        @mark: ["@^-"].
        option: factor, -"?", s.
+        @mark: ["@^-"].
           sep: factor.
   nonterminal: naming.
     -terminal: literal; 

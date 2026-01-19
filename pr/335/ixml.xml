@@ -235,9 +235,6 @@
       <alt>
          <nonterminal name="repeat1"/>
       </alt>
-      <alt>
-         <nonterminal name="repeatn"/>
-      </alt>
    </rule>
    <rule mark="-" name="factor">
       <alt>
@@ -289,48 +286,11 @@
          </alts>
       </alt>
    </rule>
-   <rule name="repeatn">
+   <rule name="option">
       <alt>
          <nonterminal name="factor"/>
-         <alts>
-            <alt>
-               <literal tmark="-" string="&lt;"/>
-               <nonterminal name="s"/>
-               <nonterminal name="min"/>
-               <nonterminal name="s"/>
-               <option>
-                  <alts>
-                     <alt>
-                        <literal tmark="-" string=","/>
-                        <nonterminal name="s"/>
-                        <nonterminal name="max"/>
-                        <nonterminal name="s"/>
-                     </alt>
-                  </alts>
-               </option>
-               <literal tmark="-" string=">"/>
-               <nonterminal name="s"/>
-            </alt>
-            <alt>
-               <literal tmark="-" string="&lt;&lt;"/>
-               <nonterminal name="s"/>
-               <nonterminal name="min"/>
-               <nonterminal name="s"/>
-               <option>
-                  <alts>
-                     <alt>
-                        <literal tmark="-" string=","/>
-                        <nonterminal name="s"/>
-                        <nonterminal name="max"/>
-                        <nonterminal name="s"/>
-                     </alt>
-                  </alts>
-               </option>
-               <literal tmark="-" string=">>"/>
-               <nonterminal name="s"/>
-               <nonterminal name="sep"/>
-            </alt>
-         </alts>
+         <literal tmark="-" string="?"/>
+         <nonterminal name="s"/>
       </alt>
    </rule>
    <rule mark="@" name="mark">
@@ -338,13 +298,6 @@
          <inclusion>
             <member string="@^-"/>
          </inclusion>
-      </alt>
-   </rule>
-   <rule name="option">
-      <alt>
-         <nonterminal name="factor"/>
-         <literal tmark="-" string="?"/>
-         <nonterminal name="s"/>
       </alt>
    </rule>
    <rule name="sep">
