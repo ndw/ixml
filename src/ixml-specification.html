@@ -361,13 +361,13 @@ class="conform">must</span> reject the grammar.</p>
 syntax and semantics of the version declared or assumed (<a class="error"
 href="#err-s12">error S12</a>).</p>
 
-<p>If the grammar specifies a particular version of iXML and the processor uses
+<p>If the grammar specifies a particular version of ixml and the processor uses
 a different version, the document element of the XML result <span
 class="conform">must</span> include an attribute named
-<code>ixml:version</code> that identifies the version of the iXML grammar used
+<code>ixml:version</code> that identifies the version of the ixml grammar used
 for the parse. If the grammar does not specify a particular version, an
 implementation <span class="conform">may</span> include an
-<code>ixml:version</code> attribute that identifies the version of the iXML
+<code>ixml:version</code> attribute that identifies the version of the ixml
 grammar used for the parse. If the grammar specifies a particular version and
 the processor uses that version, it <span class="conform">should not</span>
 include an <code>ixml:version</code> attribute. The ixml namespace URI is
@@ -592,7 +592,7 @@ occurrence of the two character sequence <code>#d #a</code>, and any
 into a single <code>#a</code> in the input. This assures that the single
 character <code>#a</code> can always be used to match an end of line,
 irrespective of the conventions of the system where the files were created. It
-follows that the iXML exclusion <code>~[#a]*</code> will always match all of
+follows that the ixml exclusion <code>~[#a]*</code> will always match all of
 the characters to the end of a line.</p>
 
 <p>If an input encoded in UTF-8 begins with a BOM, the BOM <span
@@ -858,10 +858,10 @@ There is no conformance requirement on which version of Unicode is used.</p>
     described above, or to construct XML from the resulting parse tree with the
     attribute <code>ixml:state</code> containing the word <code>prefix</code>,
     or if the parse is ambiguous, the words <code>ambiguous prefix</code>.</li>
-  <li>If the input was processed as a different version of iXML than that
+  <li>If the input was processed as a different version of ixml than that
     requested by the prolog, the document element of the XML constructed <span
     class="conform">must</span> have an <code>ixml:version</code> attribute
-    that identifies the version of iXML actually used for the parse.</li>
+    that identifies the version of ixml actually used for the parse.</li>
   <li>The form in which XML documents are produced is not constrained by this
     specification; processors <span class="conform">should</span> be capable of
     producing serialized XML as a character stream, but other forms (e.g. DOM
